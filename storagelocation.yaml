@@ -1,0 +1,14 @@
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: velero-storage-backup
+  namespace: velero
+spec:
+  backupSyncPeriod: 2m0s
+  accessMode: ReadWrite
+  provider: aws
+  objectStorage:
+    bucket: velero-backup-o2b
+    prefix: 
+  config:
+    region: us-east-1

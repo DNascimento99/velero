@@ -1,0 +1,45 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: cluster-bry-dr
+  region: sa-east-1
+
+managedNodeGroups:
+  - name: eks-mgm
+    instanceType: t2.micro
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    ssh:
+      allow: true
+vpc:
+  subnets:
+    public:
+      sa-east-1a: { id: subnet-0e0316983a2c407a2 }
+      sa-east-1b: { id: subnet-090a8f2a1fb031c6a }
+      sa-east-1c: { id: subnet-05ef0c861f65e28db }
+
+    private:
+      sa-east-1a: { id: subnet-0b565b44c2ef32ed2 }
+      sa-east-1b: { id: subnet-090a8f2a1fb031c6a }
+      sa-east-1c: { id: subnet-0022eea43be9428b0 }
+
+iam:
+  withOIDC: true
+  serviceAccounts:
+  - metadata:
+      name: aws-load-balancer-controller
+      namespace: kube-system
+    wellKnownPolicies:
+      awsLoadBalancerController: true
+      
+cloudWatch:
+ clusterLogging:
+   enableTypes: ["*"]
+   logRetentionInDays: 1
+
+
+## eksctl create cluster -f cluster.yaml ## Criação de cluster eks
+## aws eks update-kubeconfig --name einstein-prd-01 --region sa-east-1 --profile ## Obter confuguraçoes do kube config
+## aws eks --region us-east-1 update-kubeconfig --name cluster-mgm ## Configurar kubectl para o EKS
